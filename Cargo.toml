@@ -52,6 +52,9 @@ targets = [
 [package.metadata.playground]
 features = ["all"]
 
+[target.'cfg(any(unix, target_os = "nto"))'.dependencies]
+libc = "0.2.180"
+
 [target.'cfg(any(unix, target_os = "wasi"))'.dependencies]
 libc = "0.2.172"
 
