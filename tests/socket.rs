@@ -1291,6 +1291,11 @@ test!(IPv4 tos, set_tos(96));
     target_os = "redox",
     target_os = "solaris",
     target_os = "windows",
+    target_os = "vita",
+    target_os = "haiku",
+    target_os = "cygwin",
+    target_os = "wasi",
+    any(target_env = "nto70", target_env = "nto71")
 )))]
 test!(IPv4 recv_tos, set_recv_tos(true));
 
@@ -1302,7 +1307,11 @@ test!(IPv6 unicast_hops_v6, set_unicast_hops_v6(20));
     windows,
     target_os = "dragonfly",
     target_os = "freebsd",
-    target_os = "openbsd"
+    target_os = "openbsd",
+    target_os = "vita",
+    target_os = "cygwin",
+    target_os = "wasi", // IPV6_V6ONLY always true in WASI, setter not exposed (https://github.com/WebAssembly/WASI/issues/747).
+    target_os = "nto",
 )))]
 test!(IPv6 only_v6, set_only_v6(true));
 // IPv6 socket are already IPv6 only on FreeBSD and Windows.

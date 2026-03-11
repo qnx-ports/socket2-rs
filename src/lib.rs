@@ -411,13 +411,24 @@ impl<'a> DerefMut for MaybeUninitSlice<'a> {
 /// See [`Socket::set_tcp_keepalive`].
 #[derive(Debug, Clone)]
 pub struct TcpKeepalive {
-    #[cfg_attr(target_os = "openbsd", allow(dead_code))]
+    #[cfg_attr(
+        any(
+            target_os = "openbsd",
+            target_os = "haiku",
+            target_os = "vita",
+            not(any(target_env = "nto70", target_env = "nto71"))
+        ),
+        allow(dead_code)
+    )]
     time: Option<Duration>,
     #[cfg(not(any(
         target_os = "openbsd",
         target_os = "redox",
         target_os = "solaris",
-        target_os = "nto",
+        target_os = "espidf",
+        target_os = "vita",
+        target_os = "haiku",
+        any(target_env = "nto70", target_env = "nto71"),
     )))]
     interval: Option<Duration>,
     #[cfg(not(any(
@@ -425,7 +436,10 @@ pub struct TcpKeepalive {
         target_os = "redox",
         target_os = "solaris",
         target_os = "windows",
-        target_os = "nto",
+        target_os = "espidf",
+        target_os = "vita",
+        target_os = "haiku",
+        any(target_env = "nto70", target_env = "nto71"),
     )))]
     retries: Option<u32>,
 }
@@ -439,7 +453,10 @@ impl TcpKeepalive {
                 target_os = "openbsd",
                 target_os = "redox",
                 target_os = "solaris",
-                target_os = "nto",
+                target_os = "espidf",
+                target_os = "vita",
+                target_os = "haiku",
+                any(target_env = "nto70", target_env = "nto71"),
             )))]
             interval: None,
             #[cfg(not(any(
@@ -447,7 +464,10 @@ impl TcpKeepalive {
                 target_os = "redox",
                 target_os = "solaris",
                 target_os = "windows",
-                target_os = "nto",
+                target_os = "espidf",
+                target_os = "vita",
+                target_os = "haiku",
+                any(target_env = "nto70", target_env = "nto71"),
             )))]
             retries: None,
         }
