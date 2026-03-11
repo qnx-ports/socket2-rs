@@ -26,6 +26,9 @@ include       = [
   "src/**/*.rs",
 ]
 
+[patch.crates-io]
+libc = { git = "https://github.com/qnx-ports/libc-rs", branch = "qnx-0.2.180" }
+
 [package.metadata.docs.rs]
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
