@@ -122,7 +122,7 @@ pub(crate) use libc::MSG_TRUNC;
 #[cfg(not(any(target_os = "redox", target_os = "wasi")))]
 pub(crate) use libc::SO_OOBINLINE;
 // Used in `Socket`.
-#[cfg(not(target_os = "nto"))]
+#[cfg(not(any(target_env = "nto71", target_env = "nto70")))]
 pub(crate) use libc::ipv6_mreq as Ipv6Mreq;
 #[cfg(all(feature = "all", target_os = "linux"))]
 pub(crate) use libc::IPV6_HDRINCL;
@@ -176,11 +176,11 @@ pub(crate) use libc::IP_HDRINCL;
     target_os = "solaris",
     target_os = "haiku",
     target_os = "hurd",
-    target_os = "nto",
     target_os = "espidf",
     target_os = "vita",
     target_os = "wasi",
     target_os = "cygwin",
+    any(target_env = "nto70", target_env = "nto71"),
 )))]
 pub(crate) use libc::IP_RECVTOS;
 #[cfg(not(any(
@@ -229,10 +229,10 @@ pub(crate) use libc::{
     target_os = "openbsd",
     target_os = "redox",
     target_os = "fuchsia",
-    target_os = "nto",
     target_os = "espidf",
     target_os = "vita",
     target_os = "wasi",
+    any(target_env = "nto70", target_env = "nto71"),
 )))]
 pub(crate) use libc::{
     ip_mreq_source as IpMreqSource, IP_ADD_SOURCE_MEMBERSHIP, IP_DROP_SOURCE_MEMBERSHIP,
@@ -246,12 +246,12 @@ pub(crate) use libc::{
     target_os = "visionos",
     target_os = "macos",
     target_os = "netbsd",
-    target_os = "nto",
     target_os = "openbsd",
     target_os = "solaris",
     target_os = "tvos",
     target_os = "watchos",
     target_os = "wasi",
+    target_os = "nto",
 )))]
 pub(crate) use libc::{IPV6_ADD_MEMBERSHIP, IPV6_DROP_MEMBERSHIP};
 #[cfg(any(
@@ -267,6 +267,7 @@ pub(crate) use libc::{IPV6_ADD_MEMBERSHIP, IPV6_DROP_MEMBERSHIP};
     target_os = "solaris",
     target_os = "tvos",
     target_os = "watchos",
+    not(any(target_env = "nto71", target_env = "nto70")),
     all(target_os = "wasi", not(target_env = "p1")),
 ))]
 pub(crate) use libc::{
@@ -302,9 +303,9 @@ pub(crate) type Bool = c_int;
     target_os = "ios",
     target_os = "visionos",
     target_os = "macos",
-    target_os = "nto",
     target_os = "tvos",
     target_os = "watchos",
+    any(target_env = "nto70", target_env = "nto71"),
 ))]
 use libc::TCP_KEEPALIVE as KEEPALIVE_TIME;
 #[cfg(not(any(
@@ -312,11 +313,11 @@ use libc::TCP_KEEPALIVE as KEEPALIVE_TIME;
     target_os = "ios",
     target_os = "visionos",
     target_os = "macos",
-    target_os = "nto",
     target_os = "openbsd",
     target_os = "tvos",
     target_os = "watchos",
     target_os = "vita",
+    any(target_env = "nto71", target_env = "nto70"),
 )))]
 use libc::TCP_KEEPIDLE as KEEPALIVE_TIME;
 
@@ -1238,8 +1239,8 @@ pub(crate) fn set_tcp_keepalive(fd: RawSocket, keepalive: &TcpKeepalive) -> io::
     #[cfg(not(any(
         target_os = "haiku",
         target_os = "openbsd",
-        target_os = "nto",
-        target_os = "vita"
+        target_os = "vita",
+        any(target_env = "nto71", target_env = "nto70"),
     )))]
     if let Some(time) = keepalive.time {
         let secs = into_secs(time);
@@ -1263,6 +1264,7 @@ pub(crate) fn set_tcp_keepalive(fd: RawSocket, keepalive: &TcpKeepalive) -> io::
         target_os = "watchos",
         target_os = "cygwin",
         all(target_os = "wasi", not(target_env = "p1")),
+        not(any(target_env = "nto70", target_env = "nto71")),
     ))]
     {
         if let Some(interval) = keepalive.interval {
@@ -1275,7 +1277,8 @@ pub(crate) fn set_tcp_keepalive(fd: RawSocket, keepalive: &TcpKeepalive) -> io::
         }
     }
 
-    #[cfg(target_os = "nto")]
+
+    #[cfg(any(target_env = "nto70", target_env = "nto71"))]
     if let Some(time) = keepalive.time {
         let secs = into_timeval(Some(time));
         unsafe { setsockopt(fd, libc::IPPROTO_TCP, KEEPALIVE_TIME, secs)? }
@@ -1287,8 +1290,8 @@ pub(crate) fn set_tcp_keepalive(fd: RawSocket, keepalive: &TcpKeepalive) -> io::
 #[cfg(not(any(
     target_os = "haiku",
     target_os = "openbsd",
-    target_os = "nto",
-    target_os = "vita"
+    target_os = "vita",
+    any(target_env = "nto70", target_env = "nto71"),
 )))]
 fn into_secs(duration: Duration) -> c_int {
     min(duration.as_secs(), c_int::MAX as u64) as c_int
@@ -1393,11 +1396,11 @@ pub(crate) fn from_in6_addr(addr: in6_addr) -> Ipv6Addr {
     target_os = "openbsd",
     target_os = "redox",
     target_os = "solaris",
-    target_os = "nto",
     target_os = "espidf",
     target_os = "vita",
     target_os = "cygwin",
     target_os = "wasi",
+    any(target_env = "nto70", target_env = "nto71")
 )))]
 pub(crate) const fn to_mreqn(
     multiaddr: &Ipv4Addr,
