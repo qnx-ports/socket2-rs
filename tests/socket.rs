@@ -1562,7 +1562,7 @@ test!(IPv6 unicast_hops_v6, set_unicast_hops_v6(20));
     target_os = "vita",
     target_os = "cygwin",
     target_os = "wasi", // IPV6_V6ONLY always true in WASI, setter not exposed (https://github.com/WebAssembly/WASI/issues/747).
-    not(any(target_env = "nto71", target_env = "nto70"))
+    target_os = "nto",
 )))]
 test!(IPv6 only_v6, set_only_v6(true));
 // IPv6 socket are already IPv6 only on FreeBSD and Windows.
