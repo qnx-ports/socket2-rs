@@ -437,7 +437,7 @@ pub struct TcpKeepalive {
             target_os = "openbsd",
             target_os = "haiku",
             target_os = "vita",
-            not(any(target_env = "nto70", target_env = "nto71"))
+            all(target_os = "nto", not(target_env = "nto71"), not(target_env = "nto70")),
         ),
         allow(dead_code)
     )]
