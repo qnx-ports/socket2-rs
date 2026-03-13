@@ -267,7 +267,11 @@ pub(crate) use libc::{IPV6_ADD_MEMBERSHIP, IPV6_DROP_MEMBERSHIP};
     target_os = "solaris",
     target_os = "tvos",
     target_os = "watchos",
-    all(target_os = "nto", not(target_env = "nto71"), not(target_env = "nto70")),
+    all(
+        target_os = "nto",
+        not(target_env = "nto71"),
+        not(target_env = "nto70")
+    ),
     all(target_os = "wasi", not(target_env = "p1")),
 ))]
 pub(crate) use libc::{
@@ -317,7 +321,7 @@ use libc::TCP_KEEPALIVE as KEEPALIVE_TIME;
     target_os = "tvos",
     target_os = "watchos",
     target_os = "vita",
-    all(target_os = "nto", not(target_env = "nto71"), not(target_env = "nto70")),
+    any(target_env = "nto70", target_env = "nto71"),
 )))]
 use libc::TCP_KEEPIDLE as KEEPALIVE_TIME;
 
@@ -1264,7 +1268,11 @@ pub(crate) fn set_tcp_keepalive(fd: RawSocket, keepalive: &TcpKeepalive) -> io::
         target_os = "watchos",
         target_os = "cygwin",
         all(target_os = "wasi", not(target_env = "p1")),
-        all(target_os = "nto", not(target_env = "nto71"), not(target_env = "nto70")),
+        all(
+            target_os = "nto",
+            not(target_env = "nto71"),
+            not(target_env = "nto70")
+        ),
     ))]
     {
         if let Some(interval) = keepalive.interval {
@@ -1276,7 +1284,6 @@ pub(crate) fn set_tcp_keepalive(fd: RawSocket, keepalive: &TcpKeepalive) -> io::
             unsafe { setsockopt(fd, libc::IPPROTO_TCP, libc::TCP_KEEPCNT, retries as c_int)? }
         }
     }
-
 
     #[cfg(any(target_env = "nto70", target_env = "nto71"))]
     if let Some(time) = keepalive.time {
