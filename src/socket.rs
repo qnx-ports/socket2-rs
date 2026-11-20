@@ -1352,6 +1352,7 @@ impl Socket {
         target_os = "redox",
         target_os = "solaris",
         target_os = "nto",
+        target_os = "qnx",
         target_os = "espidf",
         target_os = "vita",
         target_os = "cygwin",
@@ -1388,6 +1389,7 @@ impl Socket {
         target_os = "redox",
         target_os = "solaris",
         target_os = "nto",
+        target_os = "qnx",
         target_os = "espidf",
         target_os = "vita",
         target_os = "cygwin",
@@ -1426,6 +1428,7 @@ impl Socket {
         target_os = "redox",
         target_os = "fuchsia",
         target_os = "nto",
+        target_os = "qnx",
         target_os = "espidf",
         target_os = "vita",
         target_os = "wasi",
@@ -1466,6 +1469,7 @@ impl Socket {
         target_os = "redox",
         target_os = "fuchsia",
         target_os = "nto",
+        target_os = "qnx",
         target_os = "espidf",
         target_os = "vita",
         target_os = "wasi",
@@ -1687,6 +1691,7 @@ impl Socket {
         target_os = "solaris",
         target_os = "haiku",
         target_os = "nto",
+        target_os = "qnx",
         target_os = "espidf",
         target_os = "nuttx",
         target_os = "vita",
@@ -1722,6 +1727,7 @@ impl Socket {
         target_os = "solaris",
         target_os = "haiku",
         target_os = "nto",
+        target_os = "qnx",
         target_os = "espidf",
         target_os = "nuttx",
         target_os = "vita",
@@ -1870,7 +1876,7 @@ impl Socket {
     /// This function specifies a new multicast group for this socket to join.
     /// The address must be a valid multicast address, and `interface` is the
     /// index of the interface to join/leave (or 0 to indicate any interface).
-    #[cfg(not(any(target_os = "nto", target_os = "nuttx")))]
+    #[cfg(not(any(target_os = "nto", target_os = "qnx", target_os = "nuttx")))]
     pub fn join_multicast_v6(&self, multiaddr: &Ipv6Addr, interface: u32) -> io::Result<()> {
         let mreq = sys::Ipv6Mreq {
             ipv6mr_multiaddr: sys::to_in6_addr(multiaddr),
@@ -1894,7 +1900,7 @@ impl Socket {
     /// For more information about this option, see [`join_multicast_v6`].
     ///
     /// [`join_multicast_v6`]: Socket::join_multicast_v6
-    #[cfg(not(any(target_os = "nto", target_os = "nuttx")))]
+    #[cfg(not(any(target_os = "nto", target_os = "qnx", target_os = "nuttx")))]
     pub fn leave_multicast_v6(&self, multiaddr: &Ipv6Addr, interface: u32) -> io::Result<()> {
         let mreq = sys::Ipv6Mreq {
             ipv6mr_multiaddr: sys::to_in6_addr(multiaddr),

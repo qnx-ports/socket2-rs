@@ -26,6 +26,7 @@ use std::net::{Ipv4Addr, Ipv6Addr};
         target_os = "illumos",
         target_os = "solaris",
         target_os = "linux",
+        target_os = "qnx",
         target_os = "android",
     )
 ))]
@@ -39,6 +40,7 @@ use std::num::NonZeroU32;
         target_os = "ios",
         target_os = "visionos",
         target_os = "linux",
+        target_os = "qnx",
         target_os = "macos",
         target_os = "tvos",
         target_os = "watchos",
@@ -119,7 +121,7 @@ pub(crate) use libc::IPPROTO_UDPLITE;
 pub(crate) use libc::{IPPROTO_ICMP, IPPROTO_ICMPV6};
 pub(crate) use libc::{IPPROTO_TCP, IPPROTO_UDP};
 // Used in `SockAddr`.
-#[cfg(all(feature = "all", any(target_os = "freebsd", target_os = "openbsd")))]
+#[cfg(all(feature = "all", any(target_os = "freebsd", target_os = "openbsd", target_os = "qnx")))]
 pub(crate) use libc::IPPROTO_DIVERT;
 pub(crate) use libc::{
     sa_family_t, sockaddr, sockaddr_in, sockaddr_in6, sockaddr_storage, socklen_t,
@@ -135,7 +137,7 @@ pub(crate) use libc::MSG_TRUNC;
 #[cfg(not(any(target_os = "redox", target_os = "wasi")))]
 pub(crate) use libc::SO_OOBINLINE;
 // Used in `Socket`.
-#[cfg(not(any(target_os = "nto", target_os = "nuttx")))]
+#[cfg(not(any(target_os = "nto", target_os = "qnx", target_os = "nuttx")))]
 pub(crate) use libc::ipv6_mreq as Ipv6Mreq;
 #[cfg(all(feature = "all", target_os = "linux"))]
 pub(crate) use libc::IPV6_HDRINCL;
@@ -199,6 +201,7 @@ pub(crate) use libc::IP_HDRINCL;
     target_os = "haiku",
     target_os = "hurd",
     target_os = "nto",
+    target_os = "qnx",
     target_os = "espidf",
     target_os = "nuttx",
     target_os = "vita",
@@ -253,6 +256,7 @@ pub(crate) use libc::{
     target_os = "redox",
     target_os = "fuchsia",
     target_os = "nto",
+    target_os = "qnx",
     target_os = "espidf",
     target_os = "vita",
     target_os = "wasi",
@@ -271,6 +275,7 @@ pub(crate) use libc::{
     target_os = "macos",
     target_os = "netbsd",
     target_os = "nto",
+    target_os = "qnx",
     target_os = "openbsd",
     target_os = "solaris",
     target_os = "tvos",
@@ -342,12 +347,18 @@ pub(crate) type Bool = c_int;
     target_os = "watchos",
 ))]
 use libc::TCP_KEEPALIVE as KEEPALIVE_TIME;
+
+// From /usr/include/netinet/tcp.h
+#[cfg(target_os = "qnx")]
+const KEEPALIVE_TIME: c_int = 256;
+
 #[cfg(not(any(
     target_os = "haiku",
     target_os = "ios",
     target_os = "visionos",
     target_os = "macos",
     all(target_os = "nto", any(target_env = "nto70", target_env = "nto71"),),
+    target_os = "qnx",
     target_os = "openbsd",
     target_os = "tvos",
     target_os = "watchos",
@@ -398,7 +409,7 @@ const MAX_BUF_LEN: usize = ssize_t::MAX as usize;
 const MAX_BUF_LEN: usize = c_int::MAX as usize - 1;
 
 // TCP_CA_NAME_MAX isn't defined in user space include files(not in libc)
-#[cfg(all(feature = "all", any(target_os = "freebsd", target_os = "linux")))]
+#[cfg(all(feature = "all", any(target_os = "freebsd", target_os = "linux", target_os = "qnx")))]
 const TCP_CA_NAME_MAX: usize = 16;
 
 #[cfg(any(
@@ -506,6 +517,7 @@ impl Type {
             target_os = "dragonfly",
             target_os = "emscripten",
             target_os = "freebsd",
+            target_os = "qnx",
             target_os = "fuchsia",
             target_os = "hurd",
             target_os = "illumos",
@@ -526,6 +538,7 @@ impl Type {
         target_os = "dragonfly",
         target_os = "emscripten",
         target_os = "freebsd",
+        target_os = "qnx",
         target_os = "fuchsia",
         target_os = "hurd",
         target_os = "illumos",
@@ -612,7 +625,7 @@ impl_debug!(
         )
     ))]
     libc::IPPROTO_UDPLITE,
-    #[cfg(all(feature = "all", any(target_os = "freebsd", target_os = "openbsd")))]
+    #[cfg(all(feature = "all", any(target_os = "freebsd", target_os = "openbsd", target_os = "qnx")))]
     libc::IPPROTO_DIVERT,
 );
 
@@ -1444,6 +1457,7 @@ pub(crate) fn from_in6_addr(addr: in6_addr) -> Ipv6Addr {
     target_os = "redox",
     target_os = "solaris",
     target_os = "nto",
+    target_os = "qnx",
     target_os = "espidf",
     target_os = "vita",
     target_os = "cygwin",
